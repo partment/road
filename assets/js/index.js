@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    //Set API Source
+    let api = 'http://api.partment.pagekite.me';
+
     //Initial Google Map
     let map;
     initialize_map();
@@ -30,6 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let adddate = document.querySelector('.adddate');
     let adddist = document.querySelector('.adddist');
     let addmachi = document.querySelector('.addmachi');
+
+    let dist = document.querySelector('.dist');
+
+    //Initial Dist List
+    let distsdata = getDist(api);
+    distsdata.then(data => {
+        data['dists'].forEach(e => {
+            dist.insertAdjacentHTML('beforeend', `<option value="${e['dist_id']}">${e['dist_name']}</option>`)
+        });
+    });
 
     //UI Event Handlers
     toggle.addEventListener('change', () => {
@@ -161,4 +174,12 @@ function updateTag(target, data, type, name) {
             updateTag(target, data, type)
         });
     });
+}
+
+function getDist(api) {
+    return Promise.resolve($.ajax({
+        url: api+'/v1/get/dists',
+        dataType: "json",
+        type: "get"
+    }));
 }
