@@ -96,18 +96,18 @@ select {
 .toggle-noti {
     position: absolute;
     top: 115px;
-    left: 38px;
+    left: 39px;
     display: inline-block;
     padding: .215rem;
     background: black;
     color: white;
     transition: opacity 0.3s ease;
-    opacity: 0.5;
+    opacity: 0.45;
     font-size: .95rem;
     z-index: 2;
     border-radius: 0.175rem;
     cursor: default;
-    animation: slide 800ms infinite ease-in-out alternate;
+    animation: slide 550ms infinite ease-in-out alternate;
 }
 .toggle-noti:hover {
     opacity: 0.65;
@@ -129,7 +129,7 @@ select {
         transform: translateY(0);
     }
     100% {
-        transform: translateY(.375rem);
+        transform: translateY(.525rem);
     }
 }
 
@@ -148,9 +148,27 @@ select {
     z-index: 2;
     border-radius: 6px;
     cursor: default;
+    transform-origin: left;
+}
+.title-scroll {
+    animation: growRight 300ms 1 ease-in-out alternate;
+}
+.title-scroll-d {
+    animation: growRight 220ms 1 ease-in-out alternate;
 }
 .title:hover {
     opacity: 1;
+}
+@keyframes growRight {
+    0% {
+        transform: scaleX(1)
+    }
+    20% {
+        transform: scaleX(0)
+    }
+    100% {
+        transform: scaleX(1)
+    }
 }
 
 /* Filter Menu Zone */

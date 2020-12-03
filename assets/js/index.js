@@ -48,6 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.addEventListener('change', () => {
         if(toggle.checked) {
             togglenoti.style.opacity = 0;
+            title.classList.remove('title-scroll');
+            title.classList.add('title-scroll');
+            setTimeout(async () => {
+                title.classList.remove('title-scroll');
+            }, 300);
             menucontainer.style.display = 'block';
             menucontainer.style.zIndex = 3;
             menucontainer.classList.remove('menucontainer-up');
@@ -57,6 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
             menucontainer.style.opacity = null;
             menucontainer.style.zIndex = null;
             menucontainer.classList.add('menucontainer-up')
+            title.classList.add('title-scroll-d');
+            setTimeout(async () => {
+                title.classList.remove('title-scroll-d');
+            }, 220);
             title.style.opacity = null;
             title.innerHTML = '道路缺失即時自動辨識查報系統';
             setTimeout(async () => {
@@ -65,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     menucontainer.style.display = 'none';
                     menucontainer.classList.remove('menucontainer-up');
                 }
-            }, 320)
+            }, 300);
         }
     });
 
