@@ -92,6 +92,42 @@ select {
 .toggle input:hover ~ .toggle-cirle, .toggle-cirle:hover {
     opacity: 1;
 }
+.toggle-noti {
+    position: absolute;
+    top: 115px;
+    left: 38px;
+    display: inline-block;
+    padding: .215rem;
+    background: black;
+    color: white;
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+    font-size: .95rem;
+    z-index: 2;
+    border-radius: 0.175rem;
+    cursor: default;
+    animation: slide 800ms infinite ease-in-out alternate;
+}
+.toggle-noti:before {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    transform: rotate(45deg);
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    background: black;
+    z-index: -1;
+}
+@keyframes slide {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(.375rem);
+    }
+}
 
 /* Title Zone */
 .title {

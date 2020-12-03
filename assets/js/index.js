@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //UI Elements
     let toggleshape = document.querySelector('.toggle');
     let toggle = document.querySelector('.toggle input');
+    let togglenoti = document.querySelector('.toggle-noti');
     let title = document.querySelector('.title');
     let menucontainer = document.querySelector('.menucontainer');
     let alltype = document.querySelectorAll('.type:not(.all)');
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //UI Event Handlers
     toggle.addEventListener('change', () => {
         if(toggle.checked) {
+            togglenoti.style.opacity = 0;
             menucontainer.style.display = 'block';
             menucontainer.style.zIndex = 3;
             menucontainer.classList.remove('menucontainer-up');
@@ -46,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title.innerHTML = '道路缺失即時自動辨識查報系統';
             setTimeout(async () => {
                 if(!toggle.checked) {
+                    togglenoti.style.opacity = null;
                     menucontainer.style.display = 'none';
                     menucontainer.classList.remove('menucontainer-up');
                 }
