@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Initial Google Map
     let map;
-    initialize_map();
 
     //Initial Date Picker
     $('[data-toggle="datepicker"]').datepicker({
@@ -16,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //Initial Data Arrays
-    let types = [];
-    let dists = [];
-    let dates = [];
-    let roads = [];
+    let types = JSON.parse(localStorage.getItem('types')) || [];
+    let dists = JSON.parse(localStorage.getItem('dists')) || [];
+    let dates = JSON.parse(localStorage.getItem('dates')) || [];
+    let roads = JSON.parse(localStorage.getItem('roads')) || [];
 
     //UI Elements
     let toggleshape = document.querySelector('.toggle');
@@ -28,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let title = document.querySelector('.title');
     let menucontainer = document.querySelector('.menucontainer');
     let alltype = document.querySelectorAll('.type:not(.all)');
-    let typeall = document.querySelector('.type.all')
-    let chooseall = true;
+    let typeall = document.querySelector('.type.all');
+    let choosed = false;
     let adddate = document.querySelector('.adddate');
     let adddist = document.querySelector('.adddist');
     let addmachi = document.querySelector('.addmachi');
@@ -44,6 +43,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    //Retrive Saved Data
+    if(types.length == 0) {
+        typeall.checked = true;
+    }else {
+        typeall.checked = false;
+        types.forEach(e => {
+            document.querySelector(`.type:not(.all)[data-type="${e}"]`).checked = true;
+        })
+    }
+    updateTag(document.querySelector('.datetags'), dates, 'date');
+    updateTag(document.querySelector('.disttags'), dists, 'dist');
+    updateTag(document.querySelector('.roadtags'), roads, 'road');
+
+    //Initial Defects
+    let defectsdata = getDefects(api, types, dists, dates, roads);
+    defectsdata.then(data => {
+        initialize_map(data['defects']);
+    });
+    
     //UI Event Handlers
     toggle.addEventListener('change', () => {
         if(toggle.checked) {
@@ -65,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title.classList.add('title-scroll-d');
             setTimeout(async () => {
                 title.classList.remove('title-scroll-d');
-            }, 220);
+            }, 260);
             title.style.opacity = null;
             title.innerHTML = '道路缺失即時自動辨識查報系統';
             setTimeout(async () => {
@@ -75,30 +93,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     menucontainer.classList.remove('menucontainer-up');
                 }
             }, 300);
+            saveData();
+            defectsdata = getDefects(api, types, dists, dates, roads);
+            defectsdata.then(data => {
+                initialize_map(data['defects']);
+            });
         }
     });
 
     typeall.addEventListener('change', () => {
-        let alltype = document.querySelectorAll('.menu .container input');
         if(typeall.checked) {
-            alltype.forEach(e => {
-                e.checked = true;
-            });
-        }else {
+            types = [];
             alltype.forEach(e => {
                 e.checked = false;
             });
+        }else {
+            choosed = false;
+            alltype.forEach(e => {
+                if(e.checked) choosed = true;
+            });
+            if(!choosed) typeall.checked = true;
         }
+        saveData();
     });
 
     alltype.forEach(e => {
         e.addEventListener('change', () => {
-            chooseall = true;
+            choosed = false;
             alltype.forEach(e => {
-                if(!e.checked) chooseall = false;
+                if(e.checked) choosed = true;
             })
-            if(!chooseall) typeall.checked = false;
-            else typeall.checked = true;
+            if(!choosed) typeall.checked = true;
+            else typeall.checked = false;
+            saveData();
         });
     });
 
@@ -114,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateTag(document.querySelector('.datetags'), dates, 'date');
         }
         document.querySelector('.menu .date').value = null;
+        saveData();
     });
 
     adddist.addEventListener('click', () => {
@@ -129,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dists.push([value, name]);
             updateTag(document.querySelector('.disttags'), dists, 'dist');
         }
+        saveData();
     });
 
     addmachi.addEventListener('click', () => {
@@ -141,14 +170,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.querySelector('.menu .machi').value = null;
         document.querySelector('.menu .machi').focus();
+        saveData();
     });
 
     title.addEventListener('click', () => {
-        console.log(dists);
+        console.log(types);
     })
+
+    function saveData() {
+        /* Start of Saving Filters */
+        if(typeall.checked) {
+            types = [];
+        }else {
+            types = [];
+            alltype.forEach(e => {
+                if(e.checked) {
+                    types.push(e.dataset.type);
+                }
+            });
+        }
+        localStorage.setItem('types', JSON.stringify(types));
+        localStorage.setItem('dists', JSON.stringify(dists));
+        localStorage.setItem('dates', JSON.stringify(dates));
+        localStorage.setItem('roads', JSON.stringify(roads));
+        /* End of Saving Filters */
+    }
 });
 
-function initialize_map() {
+function initialize_map(defects) {
     document.querySelector('.map').style.display = 'block';
     map = new google.maps.Map(
         document.querySelector('.map'), {
@@ -164,9 +213,16 @@ function initialize_map() {
             fullscreenControl: false
         }
     );
+    for (let i = 0; i < defects.length; i++) {
+        const marker = new google.maps.Marker({
+            position: new google.maps.LatLng(defects[i].GPS_y, defects[i].GPS_x),
+            icon: 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png',
+            map: map,
+        });
+    }    
 }
 
-function updateTag(target, data, type, name) {
+function updateTag(target, data, type) {
     target.innerHTML = '';
     for(let i = 0;i<data.length;i++) {
         if(type == 'dist') {
@@ -180,7 +236,10 @@ function updateTag(target, data, type, name) {
         let index = tag.dataset.index;
         tag.addEventListener('click', () => {
             data.splice(index, 1);
-            updateTag(target, data, type)
+            updateTag(target, data, type);
+            /* Start of Saving Filters */
+            localStorage.setItem(type+'s', JSON.stringify(data));
+            /* End of Saving Filters */
         });
     });
 }
@@ -190,5 +249,36 @@ function getDist(api) {
         url: api+'/v1/get/dists',
         dataType: "json",
         type: "get"
+    }));
+}
+
+function getDefects(api, types, dists, dates, roads) {
+    let typestring = '', diststring = '', datestring = '', roadstring = '';
+    for(let i = 0; i < types.length; i++) {
+        if(i == 0) typestring += types[i];
+        else typestring += ','+types[i];
+    }
+    for(let i = 0; i < dists.length; i++) {
+        if(i == 0) diststring += dists[i][0];
+        else diststring += ','+dists[i][0];
+    }
+    for(let i = 0; i < dates.length; i++) {
+        if(i == 0) datestring += dates[i];
+        else datestring += ','+dates[i];
+    }
+    for(let i = 0; i < roads.length; i++) {
+        if(i == 0) roadstring += roads[i];
+        else roadstring += ','+roads[i];
+    }
+    return Promise.resolve($.ajax({
+        url: api+'/v1/get/defects',
+        dataType: "json",
+        type: "get",
+        data: {
+            'dist': diststring,
+            'road': roadstring,
+            'date': datestring,
+            'type': typestring
+        }
     }));
 }
