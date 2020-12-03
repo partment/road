@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>道路缺失即時自動辨識查報系統</title>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7GESj_4pzqInDmJ_q9VS0f6xaU-zJebE&language=zh-TW&region=TW" type="text/javascript"></script>
+        <script src="./assets/js/jquery-3.5.1.min.js"></script>
+        <script src="./assets/js/datepicker.min.js"></script>
+        <script src="./assets/js/datepicker.zh-TW.js"></script>
+        <script src="./assets/js/index.js"></script>
+        <link rel="stylesheet" href="./assets/css/index.css">
+        <link rel="stylesheet" href="./assets/css/datepicker.min.css">
+    </head>
+    <body>
+        <div class="toggle">
+            <input id="toggle-switch" type="checkbox" autocomplete="off">
+            <label class="toggle-cirle" for="toggle-switch"></label>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="title">道路缺失即時自動辨識查報系統</div>
+        <div class="menucontainer">
+            <div class="menu">
+                <span class="category">缺陷種類</span>
+                <label class="container">全部
+                    <input class="type all" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label><br>
+                <label class="container">縱向裂縫輪痕
+                    <input class="type" data-type="D00" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">縱向裂縫施工
+                    <input class="type" data-type="D01" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">橫向裂縫間隔
+                    <input class="type" data-type="D10" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">橫向裂縫施工
+                    <input class="type" data-type="D11" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">龜裂
+                    <input class="type" data-type="D20" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">人孔破損
+                    <input class="type" data-type="D21" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">人孔缺失
+                    <input class="type" data-type="D30" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">路面隆起
+                    <input class="type" data-type="D31" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">坑洞
+                    <input class="type" data-type="D40" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">人孔高差
+                    <input class="type" data-type="D41" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">薄層剝離
+                    <input class="type" data-type="D42" type="checkbox" checked="checked" autocomplete="off">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <div class="menu">
+                <span class="category">行政區</span>
+                <div class="tags disttags"></div>
+                <select class="dist" autocomplete="off">
+                    <option value="001">測試行政區1</option>
+                    <option value="002">測試行政區2</option>
+                    <option value="003">測試行政區3</option>
+                </select>
+                <div class="adddist">+</div>
+            </div>
+            <div class="menu">
+                <span class="category">日期</span>
+                <div class="tags datetags"></div>
+                <input class="date" data-toggle="datepicker" autocomplete="off" placeholder="點此選擇日期...">
+                <div class="adddate">+</div>
+            </div>
+            <div class="menu">
+                <span class="category">街道名稱</span>
+                <div class="tags roadtags"></div>
+                <input class="machi input" type="text" placeholder="輸入街道名稱..." autocomplete="off">
+                <div class="addmachi">+</div>
+            </div>
+        </div>
+        <div class="map"></div>
+    </body>
+</html>

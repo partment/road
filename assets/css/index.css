@@ -1,0 +1,287 @@
+@charset "UTF-8";
+
+/* Global Zone */
+* {
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+::placeholder {
+    color: #ececec;
+    opacity: 1;
+}
+::-ms-input-placeholder {
+    color: #ececec;
+}
+select {
+    width: 180px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAh0lEQVQ4T93TMQrCUAzG8V9x8QziiYSuXdzFC7h4AcELOPQAdXYovZCHEATlgQV5GFTe1ozJlz/kS1IpjKqw3wQBVyy++JI0y1GTe7DCBbMAckeNIQKk/BanALBB+16LtnDELoMcsM/BESDlz2heDR3WePwKSLo5eoxz3z6NNcFD+vu3ij14Aqz/DxGbKB7CAAAAAElFTkSuQmCC');
+    background-repeat: no-repeat;
+    background-position: 155px center;
+}
+
+/* Toggle Zone */
+.toggle {
+    display: block;
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    z-index: 99;
+    transition: transfrom 2s ease;
+}
+.toggle input {
+    display: block;
+    position: absolute;
+    top: -7px;
+    left: -5px;
+    width: 38px;
+    height: 32px;
+    opacity: 0;
+    z-index: 100;
+    cursor: pointer;
+}
+.toggle span {
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin-bottom: 6px;
+    position: relative;
+    background: white;
+    border-radius: 3px;
+    z-index: 99;
+    transform-origin: 4px 0px;
+    transition: transform 0.2s cubic-bezier(0.77, 0.2, 0.05, 1), background 0.2s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.2s ease;
+}
+.toggle span:first-child {
+    transform-origin: 0% 0%;
+}
+.toggle span:nth-last-child(2) {
+    transform-origin: 0% 100%;
+}
+.toggle input:checked ~ span {
+    opacity: 1;
+    transform: rotate(45deg) translate(5px, -3px);
+}
+.toggle input:checked ~ span:nth-last-child(2) {
+    opacity: 0;
+    transform: rotate(0deg) scale(0.2, 0.2);
+}
+.toggle input:checked ~ span:nth-last-child(1) {
+    transform: rotate(-45deg) translate(1px, 3px);
+}
+.toggle-cirle {
+    background: black;
+    border-radius: 100%;
+    width: 70px;
+    height: 70px;
+    margin-left: -17px;
+    margin-top: -23px;
+    position: absolute;
+    line-height: 70px;
+    transition: opacity 0.5s;
+    opacity: 0.6;
+    cursor: pointer;
+}
+.toggle input:hover ~ .toggle-cirle, .toggle-cirle:hover {
+    opacity: 1;
+}
+
+/* Title Zone */
+.title {
+    position: absolute;
+    top: 27px;
+    left: 130px;
+    display: inline-block;
+    padding: 20px;
+    background: black;
+    color: white;
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+    font-size: 22px;
+    z-index: 2;
+    border-radius: 6px;
+    cursor: default;
+}
+.title:hover {
+    opacity: 1;
+}
+
+/* Filter Menu Zone */
+.menucontainer {
+    position: absolute;
+    top: 110px;
+    left: 26px;
+    width: 670px;
+    animation: growDown 300ms ease-in-out forwards;
+    transform-origin: top center;
+    z-index: 1;
+    display: none;
+}
+.menucontainer-up {
+    animation: growUp 300ms ease-in-out forwards;
+}
+.menu {
+    position: relative;
+    background: rgb(4, 1, 12);
+    color: white;
+    list-style-type: none;
+    padding: .725rem;
+    margin-bottom: 1.1rem;
+    border-radius: 6px;
+    z-index: inherit;
+}
+@keyframes growDown {
+    0% {
+        transform: scaleY(0)
+    }
+    80% {
+        transform: scaleY(1.1)
+    }
+    100% {
+        transform: scaleY(1)
+    }
+}
+@keyframes growUp {
+    0% {
+        transform: scaleY(1)
+    }
+    80% {
+        transform: scaleY(1.1)
+    }
+    100% {
+        transform: scaleY(0)
+    }
+}
+.menu .category {
+    display: block;
+    font-size: 24px;
+    font-weight: 1000;
+    margin-bottom: 3px;
+}
+.menu .category::before {
+    content: '🔎';
+}
+/* Start of Custom Checkbox */
+.container {
+    display: inline-block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.checkmark {
+    position: absolute;
+    top: 2.5px;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background: white;
+    border-radius: 2px;
+}
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+.container:hover {
+    color: #ccc;
+}
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #0c2a4b;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+/* End of Custom Checkbox */
+/* Start of Custom Input */
+.menu .input, .menu .dist, .menu .date {
+    display: inline-block;
+    padding: .375rem .75rem;
+    font-size: 1.1rem;
+    color: #fafafa;
+    background-color: rgb(48, 48, 48);
+    background-clip: padding-box;
+    border: 2px solid #ced4da00;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.menu .date {
+    width: 150px;
+    cursor: pointer;
+}
+.menu .input:focus, .menu .dist:focus {
+    border: 2px solid #007bff;
+    outline: none;
+}
+/* End of Custom Input */
+.addmachi, .adddist, .adddate {
+    display: inline-block;
+    padding: .4rem .65rem;
+    font-size: 1.5rem;
+    line-height: 1.1rem;
+    border-radius: .25rem;
+    color: white;
+    background: #0c2a4b;
+    cursor: pointer;
+    user-select: none;
+}
+/* Start of Custom Tags */
+.tags .tag {
+    margin-right: 2px;
+    margin-top: 4px;
+    margin-bottom: 6px;
+    background: #1b1b1b;
+    display: inline-block;
+    padding: .4em .6em .2em;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+.tag [data-role="remove"] {
+    margin-left: 8px;
+    cursor: pointer;
+}
+.tag [data-role="remove"]::after {
+    content: "✖";
+    padding: 0px 2px;
+}
+/* End of Custom Tags */
+
+/* Map Container */
+.map {
+    height: 100%;
+}
