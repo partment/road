@@ -5,6 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
     //Initial Google Map
     let map;
 
+    //Initial Defects Name
+    let defectsname = {
+        'D00': '縱向裂縫輪痕',
+        'D01': '縱向裂縫施工',
+        'D10': '橫向裂縫間隔',
+        'D11': '橫向裂縫施工',
+        'D20': '龜裂',
+        'D21': '人孔破損',
+        'D30': '人孔缺失',
+        'D31': '路面隆起',
+        'D40': '坑洞',
+        'D41': '人孔高差',
+        'D42': '薄層剝離'
+    };
+
     //Initial Date Picker
     $('[data-toggle="datepicker"]').datepicker({
         language: 'zh-TW',
@@ -31,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let adddate = document.querySelector('.adddate');
     let adddist = document.querySelector('.adddist');
     let addmachi = document.querySelector('.addmachi');
+    let closewindow = document.querySelector('.detail .window .close');
 
     let dist = document.querySelector('.dist');
 
@@ -63,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Initial Defects
     let defectsdata = getDefects(api, types, dists, dates, roads);
     defectsdata.then(data => {
-        initialize_map(data['defects']);
+        initialize_map(data['defects'], defectsname);
     }, () => {
         console.log('Server error occured when getting defect\'s infomation.');
         document.querySelector('.error').style.display = 'inline-block';
@@ -76,6 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     //UI Event Handlers
+    closewindow.addEventListener('click', () => {
+        document.querySelector('.detail').classList.remove('show');
+    });
+
     toggle.addEventListener('change', () => {
         if(toggle.checked) {
             localStorage.setItem('changed', false);
@@ -110,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(localStorage.getItem('changed') == 'true') {
                 defectsdata = getDefects(api, types, dists, dates, roads);
                 defectsdata.then(data => {
-                    initialize_map(data['defects']);
+                    initialize_map(data['defects'], defectsname);
                 }, () => {
                     console.log('Server error occured when getting defect\'s infomation.');
                     document.querySelector('.error').style.display = 'inline-block';
@@ -222,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function initialize_map(defects) {
+function initialize_map(defects, defectsname) {
     document.querySelector('.map').style.display = 'block';
     map = new google.maps.Map(
         document.querySelector('.map'), {
@@ -243,6 +263,12 @@ function initialize_map(defects) {
             position: new google.maps.LatLng(defects[i].GPS_y, defects[i].GPS_x),
             icon: 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png',
             map: map,
+        });
+        marker.addListener('click', () => {
+            document.querySelector('.detail .window .type').innerHTML = `${defectsname[defects[i].markid]}`;
+            document.querySelector('.detail .window .datetime').innerHTML = `${defects[i].markdate}`;
+            document.querySelector('.detail .window .coordinate').innerHTML = `${defects[i].GPS_x}, ${defects[i].GPS_y}`;
+            document.querySelector('.detail').classList.add('show');
         });
     }    
 }
