@@ -28,12 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let menucontainer = document.querySelector('.menucontainer');
     let alltype = document.querySelectorAll('.type:not(.all)');
     let typeall = document.querySelector('.type.all');
-    let choosed = false;
     let adddate = document.querySelector('.adddate');
     let adddist = document.querySelector('.adddist');
     let addmachi = document.querySelector('.addmachi');
 
     let dist = document.querySelector('.dist');
+
+    //Global Logics
+    let choosed = false;
 
     //Initial Dist List
     let distsdata = getDist(api);
@@ -41,6 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         data['dists'].forEach(e => {
             dist.insertAdjacentHTML('beforeend', `<option value="${e['dist_id']}">${e['dist_name']}</option>`)
         });
+    }, () => {
+        console.log('Server error occured when getting dist\'s infomation.');
     });
 
     //Retrive Saved Data
@@ -60,11 +64,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let defectsdata = getDefects(api, types, dists, dates, roads);
     defectsdata.then(data => {
         initialize_map(data['defects']);
+    }, () => {
+        console.log('Server error occured when getting defect\'s infomation.');
+        document.querySelector('.error').style.display = 'inline-block';
+    }).finally(() => {
+        document.querySelector('.loading').style.opacity = 0;
+        setTimeout(() => {
+            document.querySelector('.loading').style.opacity = null;
+            document.querySelector('.loading').classList.remove('show');
+        }, 320);
     });
     
     //UI Event Handlers
     toggle.addEventListener('change', () => {
         if(toggle.checked) {
+            localStorage.setItem('changed', false);
             togglenoti.style.opacity = 0;
             title.classList.remove('title-scroll');
             title.classList.add('title-scroll');
@@ -93,11 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     menucontainer.classList.remove('menucontainer-up');
                 }
             }, 300);
-            saveData();
-            defectsdata = getDefects(api, types, dists, dates, roads);
-            defectsdata.then(data => {
-                initialize_map(data['defects']);
-            });
+            if(localStorage.getItem('changed') == 'true') {
+                defectsdata = getDefects(api, types, dists, dates, roads);
+                defectsdata.then(data => {
+                    initialize_map(data['defects']);
+                }, () => {
+                    console.log('Server error occured when getting defect\'s infomation.');
+                    document.querySelector('.error').style.display = 'inline-block';
+                }).finally(() => {
+                    document.querySelector('.loading').style.opacity = 0;
+                    setTimeout(() => {
+                        document.querySelector('.loading').style.opacity = null;
+                        document.querySelector('.loading').classList.remove('show');
+                    }, 320);
+                });
+            }
         }
     });
 
@@ -178,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     function saveData() {
+        localStorage.setItem('changed', true);
         /* Start of Saving Filters */
         if(typeall.checked) {
             types = [];
@@ -235,6 +260,7 @@ function updateTag(target, data, type) {
     tags.forEach(tag => {
         let index = tag.dataset.index;
         tag.addEventListener('click', () => {
+            localStorage.setItem('changed', true);
             data.splice(index, 1);
             updateTag(target, data, type);
             /* Start of Saving Filters */
@@ -248,7 +274,8 @@ function getDist(api) {
     return Promise.resolve($.ajax({
         url: api+'/v1/get/dists',
         dataType: "json",
-        type: "get"
+        type: "get",
+        timeout: 5000
     }));
 }
 
@@ -270,6 +297,7 @@ function getDefects(api, types, dists, dates, roads) {
         if(i == 0) roadstring += roads[i];
         else roadstring += ','+roads[i];
     }
+    document.querySelector('.loading').classList.add('show');
     return Promise.resolve($.ajax({
         url: api+'/v1/get/defects',
         dataType: "json",
@@ -279,6 +307,7 @@ function getDefects(api, types, dists, dates, roads) {
             'road': roadstring,
             'date': datestring,
             'type': typestring
-        }
+        },
+        timeout: 5000
     }));
 }
