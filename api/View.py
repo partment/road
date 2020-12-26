@@ -97,6 +97,8 @@ def defects():
     resp = jsonify(response)
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
+    conn.close()
+
     return resp
 
 @app.route('/v1/get/dists', methods=['GET'])
@@ -114,6 +116,8 @@ def dicts():
 
     resp = jsonify(response)
     resp.headers['Access-Control-Allow-Origin'] = '*'
+
+    conn.close()
 
     return resp
 
