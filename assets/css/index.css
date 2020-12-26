@@ -31,6 +31,7 @@ select {
 /* Loading Wrap Zone */
 .loading {
     position: absolute;
+    top: 0;
     z-index: -10000;
     width: 100%;
     height: 100vh;
@@ -56,6 +57,7 @@ select {
 /* Detail Zone */
 .detail {
     position: absolute;
+    top: 0;
     z-index: -10000;
     width: 100%;
     height: 100vh;
@@ -224,6 +226,29 @@ select {
     100% {
         transform: translateY(.525rem);
     }
+}
+
+/* Defects Info Zone */
+.defectsinfo {
+    position: absolute;
+    bottom: 27px;
+    right: 19px;
+    padding: .475rem;
+    background: black;
+    color: white;
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+    font-size: 1.1rem;
+    z-index: 2;
+    border-radius: 6px;
+    cursor: default;
+    transform-origin: left;
+}
+.defectsinfo:hover {
+    opacity: 1;
+}
+.defectsinfo .type {
+    display: list-item;
 }
 
 /* Title Zone */

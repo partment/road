@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>道路缺失即時自動辨識查報系統</title>
+        <meta name="description" content="道路缺失即時自動辨識查報系統">
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7GESj_4pzqInDmJ_q9VS0f6xaU-zJebE&language=zh-TW&region=TW" type="text/javascript"></script>
         <script src="./assets/js/jquery-3.5.1.min.js"></script>
         <script src="./assets/js/datepicker.min.js"></script>
@@ -13,21 +14,6 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/notosanstc.css">
     </head>
     <body>
-        <div class="error">無法從伺服器取得資料，請洽管理人員</div>
-        <div class="loading">
-            <div class="text">正在取得資料</div>
-        </div>
-        <div class="detail">
-            <div class="window">
-                <div class="close">✖</div>
-                <div class="type">縱向裂縫輪痕</div>
-                <div class="datetime">2020-11-13</div>
-                <div class="coordinate">121.01811 24.79475</div>
-                <div class="img">
-                    <img src=".\assets\img\example.jpg" alt="">
-                </div>
-            </div>
-        </div>
         <div class="toggle">
             <input id="toggle-switch" type="checkbox" autocomplete="off">
             <label class="toggle-cirle" for="toggle-switch"></label>
@@ -35,7 +21,6 @@
             <span></span>
             <span></span>
         </div>
-        <div class="toggle-noti">點此選擇篩選條件</div>
         <div class="title">道路缺失即時自動辨識查報系統</div>
         <div class="menucontainer">
             <div class="menu">
@@ -109,5 +94,22 @@
             </div>
         </div>
         <div class="map"></div>
+        <div class="toggle-noti">點此選擇篩選條件</div>
+        <div class="error">無法從伺服器取得資料，請洽管理人員</div>
+        <div class="loading">
+            <div class="text">正在取得資料</div>
+        </div>
+        <div class="detail">
+            <div class="window">
+                <div class="close">✖</div>
+                <div class="type"></div>
+                <div class="datetime"></div>
+                <div class="coordinate"></div>
+                <div class="img">
+                    <img src=".\assets\img\example.jpg" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="defectsinfo"></div>
     </body>
 </html>

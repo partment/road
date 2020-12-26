@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     defectsdata.then(data => {
         document.querySelector('.error').style.display = 'none';
         initialize_map(data['defects'], defectsname);
+        updateDefectsCount(data['defects'], types, defectsname);
     }, () => {
         console.log('Server error occured when getting defect\'s infomation.');
         document.querySelector('.error').style.display = 'inline-block';
@@ -110,7 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
             menucontainer.style.zIndex = 3;
             menucontainer.classList.remove('menucontainer-up');
             title.style.opacity = 0.87;
-            title.innerHTML = '關閉選單後套用條件';
+            setTimeout(async () => {
+                title.innerHTML = '關閉選單後套用條件';
+            }, 60);
         }else {
             menucontainer.style.opacity = null;
             menucontainer.style.zIndex = null;
@@ -120,7 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title.classList.remove('title-scroll-d');
             }, 260);
             title.style.opacity = null;
-            title.innerHTML = '道路缺失即時自動辨識查報系統';
+            setTimeout(async () => {
+                title.innerHTML = '道路缺失即時自動辨識查報系統';
+            }, 52);
             setTimeout(async () => {
                 if(!toggle.checked) {
                     togglenoti.style.opacity = null;
@@ -133,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 defectsdata.then(data => {
                     document.querySelector('.error').style.display = 'none';
                     initialize_map(data['defects'], defectsname);
+                    updateDefectsCount(data['defects'], types, defectsname);
                 }, () => {
                     console.log('Server error occured when getting defect\'s infomation.');
                     document.querySelector('.error').style.display = 'inline-block';
@@ -296,6 +302,27 @@ function updateTag(target, data, type) {
             /* End of Saving Filters */
         });
     });
+}
+
+function updateDefectsCount(data, types, defectsname) {
+    defectsinfo = document.querySelector('.defectsinfo');
+    defectsinfo.innerHTML = null;
+    let count = [];
+    for([key, value] of Object.entries(defectsname)) {
+        count[key] = 0;
+    }
+    for (let i = 0; i < data.length; i++) {
+        count[data[i].markid] += 1;
+    }
+    if(types.length == 0) {
+        for([key, value] of Object.entries(defectsname)) {
+            defectsinfo.insertAdjacentHTML('beforeend', `<div class="type">${key} ${value}：${count[key]}</div>`);
+        }
+    }else {
+        types.forEach(e => {
+            defectsinfo.insertAdjacentHTML('beforeend', `<div class="type">${e} ${defectsname[e]}：${count[e]}</div>`)
+        })
+    }
 }
 
 function getDist(api) {
