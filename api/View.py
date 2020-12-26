@@ -11,15 +11,6 @@ from flask import Flask, Response, jsonify, request
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
-conn = mariadb.connect(
-    host = Config.db_host,
-    user = Config.db_user,
-    password = Config.db_password,
-    database = Config.db_database
-)
-
-cursor = conn.cursor()
-
 """@app.route('/v1/get/defects/today', methods=['GET'])
 def defects_all():
     date = datetime.date.today()
@@ -44,6 +35,9 @@ def defects_all():
 
 @app.route('/v1/get/defects', methods=['GET'])
 def defects():
+
+    conn = connect_mysql()
+    cursor = conn.cursor()
 
     # Following regexps are meant to prevent unexpected requests or attacks
     # ^(D\d{2})(,D\d{2})*$ CHECKS IF args.type FOLLOWS THE PATTERN D01,D02,D03 ...
@@ -103,6 +97,10 @@ def defects():
 
 @app.route('/v1/get/dists', methods=['GET'])
 def dicts():
+
+    conn = connect_mysql()
+    cursor = conn.cursor()
+
     cursor.execute('select dist_id, dist_name from dist order by dist_id')
     result = cursor.fetchall()
     response = {"dists": []}
@@ -178,6 +176,14 @@ def getWhereClause(conditions):
         temp += ')'
         result += temp
     return result
+
+def connect_mysql():
+    return mariadb.connect(
+        host = Config.db_host,
+        user = Config.db_user,
+        password = Config.db_password,
+        database = Config.db_database
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
