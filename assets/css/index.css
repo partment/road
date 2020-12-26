@@ -118,6 +118,7 @@ select {
     position: absolute;
     bottom: 1.215rem;
     right: 0.735rem;
+    z-index: 10001;
 }
 
 /* Toggle Zone */

@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Initial Defects
     let defectsdata = getDefects(api, types, dists, dates, roads);
     defectsdata.then(data => {
+        document.querySelector('.error').style.display = 'none';
         initialize_map(data['defects'], defectsname);
     }, () => {
         console.log('Server error occured when getting defect\'s infomation.');
@@ -130,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(localStorage.getItem('changed') == 'true') {
                 defectsdata = getDefects(api, types, dists, dates, roads);
                 defectsdata.then(data => {
+                    document.querySelector('.error').style.display = 'none';
                     initialize_map(data['defects'], defectsname);
                 }, () => {
                     console.log('Server error occured when getting defect\'s infomation.');
