@@ -6,9 +6,9 @@ import json
 import mariadb
 import datetime
 import re
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Response, jsonify, render_template, request
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_url_path='', static_folder='templates')
 app.config['JSON_AS_ASCII'] = False
 
 """@app.route('/v1/get/defects/today', methods=['GET'])
@@ -32,6 +32,10 @@ def defects_all():
         response["defects"].append(data)
 
     return jsonify(response)"""
+
+@app.route("/", methods=['GET'])
+def index():
+    return render_template('index.html')
 
 @app.route('/v1/get/defects', methods=['GET'])
 def defects():
