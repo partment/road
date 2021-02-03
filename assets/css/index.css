@@ -18,7 +18,7 @@ html, body {
 ::-ms-input-placeholder {
     color: #ececec;
 }
-select {
+select, div.dist {
     width: 180px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -349,7 +349,7 @@ select {
     left: 0;
     top: .05rem;
     display: inline-block;
-    padding: .1rem .65rem .3rem;
+    padding: .3rem .85rem .5rem;
     font-size: 1.2rem;
     line-height: 1.2rem;
     border-radius: .25rem;
@@ -393,8 +393,8 @@ select {
 }
 .checkmark {
     position: absolute;
-    top: 2.5px;
-    left: 0;
+    top: .5px;
+    left: .3px;
     height: 25px;
     width: 25px;
     background: white;
@@ -426,8 +426,96 @@ select {
     transform: rotate(45deg);
 }
 /* End of Custom Checkbox */
+/* Start of Custom Select Dropdown */
+.menu .select {
+    position: relative;
+    display: inline-block;
+}
+.menu .list {
+    display: none;
+    position: absolute;
+    top: 36px;
+    height: 200px;
+    width: 180px;
+    background: rgb(48, 48, 48);
+    border-bottom-right-radius: .235rem;
+    border-bottom-left-radius: .235rem;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #e3e3e3 transparent;
+    animation: growDown 300ms ease-in-out forwards;
+    transform-origin: top center;
+}
+.menu .list.show {
+    display: block;
+}
+.menu .list.up {
+    animation: growUp 300ms ease-in-out forwards;
+}
+.menu .list::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+.menu .list::-webkit-scrollbar {
+	width: 6px;
+	background-color: transparent;
+}
+.menu .list::-webkit-scrollbar-thumb {
+	background-color: #e3e3e3;
+}
+.menu .list .search {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem;
+}
+.menu .list .searchbox {
+    width: 90%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    background: rgb(26, 26, 26);
+    color: white;
+}
+.menu .list ul {
+    padding: 0;
+    margin: 0;
+}
+.menu .list .option {
+    cursor: pointer;
+    outline: none;
+    padding: .275rem .725rem;
+    text-align: left;
+    width: 100%;
+    transition: all 0.2s;
+    list-style: none;
+}
+.menu .list .option.hide {
+    display: none;
+}
+.menu .list .option:hover {
+    background: rgb(29, 29, 29);
+}
+/* End of Custom Select Dropdown */
 /* Start of Custom Input */
-.menu .input, .menu .dist, .menu .date {
+.menu .dist {
+    width: 180px;
+    height: 36px;
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    color: #fafafa;
+    background-color: rgb(48, 48, 48);
+    background-clip: padding-box;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+.menu .dist.active {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.menu .input, .menu .date {
     display: inline-block;
     padding: .375rem .75rem;
     font-size: 1rem;

@@ -58,10 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let distsdata = getDist(api);
     distsdata.then(data => {
         data['dists'].forEach(e => {
-            dist.insertAdjacentHTML('beforeend', `<option value="${e['dist_id']}">${e['dist_name']}</option>`)
+            dist.insertAdjacentHTML('beforeend', `<option value="${e['dist_id']}">${e['dist_name']}</option>`);
         });
     }, () => {
         console.log('Server error occured when getting dist\'s infomation.');
+    }).finally(() => {
+        initDropdownSearch('.dist');
     });
 
     //Retrive Saved Data
@@ -193,8 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 advanced.classList.remove('show');
                 advanced.classList.remove('up');
+                menumore.innerHTML = '開啟進階選項'
             }, 300);
         }else {
+            menumore.innerHTML = '關閉進階選項'
             advanced.classList.add('show');
         }
     });
@@ -379,4 +383,64 @@ function getDefects(api, types, dists, dates, roads) {
         },
         timeout: 5000
     }));
+}
+
+function initDropdownSearch(classname) {
+    let select = document.querySelector(classname);
+    
+    select.insertAdjacentHTML('afterend', `<div class="list"></div>`);
+    select.insertAdjacentHTML('afterend', `<div class="${classname.replace('.', '')}"></div>`);
+
+    select.style.display = 'none';
+
+    let dummyselect = document.querySelector('.menu .select div.dist');
+    dummyselect.innerHTML = select.options[0].text;
+
+    let list = document.querySelector('.menu .list');
+
+    list.insertAdjacentHTML('afterbegin', `<ul></ul>`)
+
+    for(let i = 0; i < select.options.length; i++) {
+        list.querySelector('ul').insertAdjacentHTML('beforeend', `<li class="option" data-value="${select.options[i].value}">${select.options[i].text}</li>`);
+    }
+
+    list.insertAdjacentHTML('afterbegin', `<div class="search"><input type="text" class="searchbox" placeholder="搜尋..."></div>`);
+
+    let searchbox = list.querySelector('.searchbox');
+
+    searchbox.addEventListener('keyup', () => {
+        list.querySelectorAll('.option').forEach(e => {
+            (e.innerHTML.indexOf(searchbox.value.replace('台', '臺')) > -1) ? e.classList.remove('hide') : e.classList.add('hide');
+        });
+    });
+
+    dummyselect.addEventListener('click', () => {
+        if(list.classList.contains('show')) {
+            closeDropdown();
+        }else {
+            list.querySelectorAll('.option').forEach(e => {
+                (e.innerHTML.indexOf(searchbox.value.replace('台', '臺')) > -1) ? e.classList.remove('hide') : e.classList.add('hide');
+            });
+            $('.menu .list').animate({ scrollTop: 0 }, "300");
+            list.classList.add('show');
+            dummyselect.classList.add('active');
+        }
+    });
+
+    list.querySelectorAll('.option').forEach(e => {
+        e.addEventListener('click', () => {
+            dummyselect.innerHTML = e.innerHTML;
+            select.value = e.dataset.value;
+            closeDropdown();
+        });
+    });
+
+    function closeDropdown() {
+        list.classList.add('up');
+        setTimeout(() => {
+            list.classList.remove('show');
+            list.classList.remove('up');
+            dummyselect.classList.remove('active');
+        }, 300);
+    }
 }
