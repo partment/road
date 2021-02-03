@@ -309,7 +309,7 @@ select {
     color: white;
     list-style-type: none;
     padding: .725rem;
-    margin-bottom: 1.1rem;
+    margin-bottom: .5rem;
     border-radius: 6px;
     z-index: inherit;
 }
@@ -337,12 +337,39 @@ select {
 }
 .menu .category {
     display: block;
-    font-size: 24px;
+    font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: .725rem;
 }
 .menu .category::before {
     content: '🔎';
+}
+.menucontainer .more {
+    position: sticky;
+    left: 0;
+    top: .05rem;
+    display: inline-block;
+    padding: .1rem .65rem .3rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    border-radius: .25rem;
+    color: white;
+    background: #0c2a4b;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: .5rem;
+}
+.menucontainer .advanced {
+    animation: growDown 300ms ease-in-out forwards;
+    transform-origin: top center;
+    z-index: 1;
+    display: none;
+}
+.menucontainer .advanced.show {
+    display: block;
+}
+.menucontainer .advanced.up {
+    animation: growUp 300ms ease-in-out forwards;
 }
 /* Start of Custom Checkbox */
 .container {
@@ -351,7 +378,7 @@ select {
     padding-left: 30px;
     margin-bottom: .375rem;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 1.1rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -403,7 +430,7 @@ select {
 .menu .input, .menu .dist, .menu .date {
     display: inline-block;
     padding: .375rem .75rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #fafafa;
     background-color: rgb(48, 48, 48);
     background-clip: padding-box;
@@ -423,7 +450,7 @@ select {
 .addmachi, .adddist, .adddate {
     position: relative;
     left: 0;
-    top: .05rem;
+    top: .1rem;
     display: inline-block;
     padding: .1rem .65rem .4rem;
     font-size: 1.5rem;
@@ -449,6 +476,7 @@ select {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25em;
+    font-size: 0.9rem;
 }
 .tag [data-role="remove"] {
     margin-left: 8px;

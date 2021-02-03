@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let togglenoti = document.querySelector('.toggle-noti');
     let title = document.querySelector('.title');
     let menucontainer = document.querySelector('.menucontainer');
+    let menumore = document.querySelector('.menucontainer .more');
     let alltype = document.querySelectorAll('.type:not(.all)');
     let typeall = document.querySelector('.type.all');
     let adddate = document.querySelector('.adddate');
@@ -183,7 +184,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.menu .date').addEventListener('focus', () => {
         document.querySelector('.menu .date').blur();
-    })
+    });
+
+    menumore.addEventListener('click', () => {
+        let advanced = document.querySelector('.menucontainer .advanced');
+        if(advanced.classList.contains('show')) {
+            advanced.classList.add('up');
+            setTimeout(() => {
+                advanced.classList.remove('show');
+                advanced.classList.remove('up');
+            }, 300);
+        }else {
+            advanced.classList.add('show');
+        }
+    });
 
     adddate.addEventListener('click', () => {
         let value = document.querySelector('.menu .date').value;
