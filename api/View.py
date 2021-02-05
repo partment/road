@@ -6,7 +6,7 @@ import json
 import mariadb
 import datetime
 import re
-from flask import Flask, Response, jsonify, render_template, request
+from flask import Flask, Response, jsonify, render_template, request, send_from_directory
 
 app = Flask(__name__, template_folder='templates', static_url_path='', static_folder='templates')
 app.config['JSON_AS_ASCII'] = False
@@ -36,6 +36,10 @@ def defects_all():
 @app.route("/", methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.route('/img/<path:filename>')
+def send_img(filename):
+    return send_from_directory(Config.defects_img_path, filename, as_attachment=False)
 
 @app.route('/v1/get/defects', methods=['GET'])
 def defects():

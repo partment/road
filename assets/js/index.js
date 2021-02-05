@@ -291,10 +291,33 @@ function initialize_map(defects, defectsname) {
             map: map,
         });
         marker.addListener('click', () => {
+            document.querySelector('.loading').classList.add('show');
             document.querySelector('.detail .window .type').innerHTML = `${defectsname[defects[i].markid]}`;
             document.querySelector('.detail .window .datetime').innerHTML = `${defects[i].markdate}`;
             document.querySelector('.detail .window .coordinate').innerHTML = `${defects[i].GPS_x}, ${defects[i].GPS_y}`;
-            document.querySelector('.detail').classList.add('show');
+            document.querySelector('.detail .window .img').innerHTML = `<img>`
+            let image = document.querySelector('.detail .window .img img');
+            image.src = `.\\img\\${defects[i].markdate.replaceAll('-', '')}\\previews\\${defects[i].photo_loc}`
+            image.addEventListener('load', () => {
+                document.querySelector('.detail').classList.add('show');
+                document.querySelector('.loading').style.opacity = 0;
+                setTimeout(() => {
+                    document.querySelector('.loading').style.opacity = null;
+                    document.querySelector('.loading').classList.remove('show');
+                }, 320);
+            });
+            setTimeout(() => {
+                let isLoaded = image.complete && image.naturalHeight !== 0;
+                if(!isLoaded) {
+                    document.querySelector('.detail .window .img').innerHTML = `此圖片無法正常載入，請洽管理員`;
+                    document.querySelector('.detail').classList.add('show');
+                    document.querySelector('.loading').style.opacity = 0;
+                    setTimeout(() => {
+                        document.querySelector('.loading').style.opacity = null;
+                        document.querySelector('.loading').classList.remove('show');
+                    }, 320);
+                    }
+            }, 2000);
         });
     }    
 }

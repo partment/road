@@ -153,7 +153,7 @@ select, div.dist {
     border-radius: 3px;
     z-index: 99;
     transform-origin: 4px 0px;
-    transition: transform 0.2s cubic-bezier(0.77, 0.2, 0.05, 1), background 0.2s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.2s ease;
+    transition: transform 0.2s ease-in-out, background 0.2s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.2s ease;
 }
 .toggle span:first-child {
     transform-origin: 0% 0%;
@@ -161,16 +161,17 @@ select, div.dist {
 .toggle span:nth-last-child(2) {
     transform-origin: 0% 100%;
 }
-.toggle input:checked ~ span {
-    opacity: 1;
-    transform: rotate(45deg) translate(5px, -3px);
-}
-.toggle input:checked ~ span:nth-last-child(2) {
+.toggle input:checked ~ span:nth-last-child(3) {
     opacity: 0;
     transform: rotate(0deg) scale(0.2, 0.2);
 }
+.toggle input:checked ~ span:nth-last-child(2) {
+    opacity: 1;
+    transform: rotate(45deg) translate(2px, 2px);
+    width: 18px;
+}
 .toggle input:checked ~ span:nth-last-child(1) {
-    transform: rotate(-45deg) translate(1px, 3px);
+    transform: rotate(-45deg) translate(4px, 9px);
 }
 .toggle-cirle {
     background: black;
