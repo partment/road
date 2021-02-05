@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     //Set API Source
-    let api = 'https://roadapi.lilithraws.cf';
+    let api = 'https://roadapi.partment.ga';
 
     //Initial Google Map
     let map;
