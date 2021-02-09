@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         format:'yyyy-mm-dd',
         formatted:true,
         endDate:Date()
+    }).on('pick.datepicker', function (e) {
+        document.querySelector('.menu .date2').style.display = 'inline-block';
     });
 
     //Initial Data Arrays
@@ -188,6 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.menu .date').blur();
     });
 
+    document.querySelector('.menu .date2').addEventListener('focus', () => {
+        document.querySelector('.menu .date2').blur();
+    });
+
     menumore.addEventListener('click', () => {
         let advanced = document.querySelector('.menucontainer .advanced');
         if(advanced.classList.contains('show')) {
@@ -205,12 +211,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     adddate.addEventListener('click', () => {
         let value = document.querySelector('.menu .date').value;
+        let value2 = document.querySelector('.menu .date2').value;
         if(value == '') return false;
         if(dates.indexOf(value) == -1) {
-            dates.push(value);
-            updateTag(document.querySelector('.datetags'), dates, 'date');
+            if(value2 == '') {
+                dates.push(value);
+            }else {
+                let date1 = Date.parse(value.replaceAll('-', '/'));
+                let date2 = Date.parse(value2.replaceAll('-', '/'));
+                let range = (date1 < date2) ? value+'~'+value2 : (date1 > date2 ) ? value2+'~'+value : value;
+                dates.push(range);
+            }
         }
+        updateTag(document.querySelector('.datetags'), dates, 'date');
         document.querySelector('.menu .date').value = null;
+        document.querySelector('.menu .date2').value = null;
+        document.querySelector('.menu .date2').style.display = 'none';
         saveData();
     });
 
@@ -371,7 +387,7 @@ function getDist(api) {
         url: api+'/v1/get/dists',
         dataType: "json",
         type: "get",
-        timeout: 5000
+        timeout: 2000
     }));
 }
 
@@ -404,7 +420,7 @@ function getDefects(api, types, dists, dates, roads) {
             'date': datestring,
             'type': typestring
         },
-        timeout: 5000
+        timeout: 2000
     }));
 }
 
@@ -417,7 +433,7 @@ function initDropdownSearch(classname) {
     select.style.display = 'none';
 
     let dummyselect = document.querySelector('.menu .select div.dist');
-    dummyselect.innerHTML = select.options[0].text;
+    dummyselect.innerHTML = (select.options.length != 0 )? select.options[0].text : '無法取得資料';
 
     let list = document.querySelector('.menu .list');
 
@@ -435,6 +451,20 @@ function initDropdownSearch(classname) {
         list.querySelectorAll('.option').forEach(e => {
             (e.innerHTML.indexOf(searchbox.value.replace('台', '臺')) > -1) ? e.classList.remove('hide') : e.classList.add('hide');
         });
+    });
+
+    document.querySelector('html').addEventListener('click', () => {
+        closeDropdown();
+    });
+
+    dummyselect.addEventListener('click', e => {
+        e.stopPropagation();
+        return false;
+    });
+
+    list.addEventListener('click', e => {
+        e.stopPropagation();
+        return false;
     });
 
     dummyselect.addEventListener('click', () => {

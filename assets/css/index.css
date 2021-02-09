@@ -167,8 +167,7 @@ select, div.dist {
 }
 .toggle input:checked ~ span:nth-last-child(2) {
     opacity: 1;
-    transform: rotate(45deg) translate(2px, 2px);
-    width: 18px;
+    transform: rotate(45deg) translate(2px, 2px) scaleX(.5);
 }
 .toggle input:checked ~ span:nth-last-child(1) {
     transform: rotate(-45deg) translate(4px, 9px);
@@ -530,6 +529,10 @@ select, div.dist {
 .menu .date {
     width: 150px;
     cursor: pointer;
+}
+.menu .date2 {
+    width: 190px;
+    display: none;
 }
 .menu .input:focus, .menu .dist:focus {
     border: 2px solid #007bff;
