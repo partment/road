@@ -247,8 +247,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     addmachi.addEventListener('click', () => {
+        addMachi();
+    });
+
+    document.querySelector('.menu .machi').addEventListener('keypress', e => {
+        if(e.keyCode == 13) {
+            addMachi();
+        }
+    });
+
+    function addMachi() {
         let regexp = /^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$/;
         let value = document.querySelector('.menu .machi').value;
+        if(!regexp.test(value)) {
+            document.querySelector('.menu .inputbox .tooltip').classList.add('show');
+        }else {
+            document.querySelector('.menu .inputbox .tooltip').classList.remove('show');
+        }
         if(value == '' || !regexp.test(value)) return false;
         if(roads.indexOf(value) == -1) {
             roads.push(value);
@@ -257,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.menu .machi').value = null;
         document.querySelector('.menu .machi').focus();
         saveData();
-    });
+    }
 
     title.addEventListener('click', () => {
         console.log(types);

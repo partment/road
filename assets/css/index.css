@@ -538,6 +538,35 @@ select, div.dist {
     border: 2px solid #007bff;
     outline: none;
 }
+.menu .inputbox {
+    position: relative;
+    display: inline-block;
+}
+.menu .inputbox .tooltip {
+    position: absolute;
+    top: 3.5px;
+    right: -180px;
+    background: white;
+    padding: .125rem .25rem;
+    color: black;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+.menu .inputbox .tooltip.show {
+    opacity: 1;
+}
+.menu .inputbox .tooltip::before {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 6px;
+    left: -6px;
+    background: white;
+    z-index: -1;
+}
 /* End of Custom Input */
 .addmachi, .adddist, .adddate {
     position: relative;
