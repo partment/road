@@ -285,6 +285,7 @@ select, div.dist {
 }
 .defectsinfo .type {
     display: list-item;
+    list-style: none;
 }
 
 /* Title Zone */

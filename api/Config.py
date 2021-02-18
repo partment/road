@@ -6,3 +6,5 @@ db_password = '1qazCDE#'
 db_database = 'hcroad'
 
 defects_img_path = '/road/road_defects/web'
+
+last_days = 90

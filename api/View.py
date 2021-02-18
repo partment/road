@@ -184,7 +184,7 @@ def getWhereClause(conditions):
         if result != '': result += ' and '
         #Last X days data
         today = datetime.date.today()
-        past = today - datetime.timedelta(days=90)
+        past = today - datetime.timedelta(days=Config.last_days)
         result += ('markdate between "{}"and "{}"'.format(past, today))
     #DATE
     if len(conditions['markid']) > 0:
