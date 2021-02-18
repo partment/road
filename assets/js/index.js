@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let defectsdata = getDefects(api, types, dists, dates, roads);
     defectsdata.then(data => {
         document.querySelector('.error').style.display = 'none';
-        initialize_map(data['defects'], defectsname);
+        initialize_map(data['defects'], defectsname, api);
         updateDefectsCount(data['defects'], types, defectsname);
     }, () => {
         console.log('Server error occured when getting defect\'s infomation.');
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 defectsdata = getDefects(api, types, dists, dates, roads);
                 defectsdata.then(data => {
                     document.querySelector('.error').style.display = 'none';
-                    initialize_map(data['defects'], defectsname);
+                    initialize_map(data['defects'], defectsname, api);
                     updateDefectsCount(data['defects'], types, defectsname);
                 }, () => {
                     console.log('Server error occured when getting defect\'s infomation.');
@@ -299,12 +299,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function initialize_map(defects, defectsname) {
+/* Initial Google Map */
+function initialize_map(defects, defectsname, api) {
+    /* Calculate center position and zoom leverage depends on average and standard deviation. */
+    let x = 0;
+    let y = 0;
+    let sx = 0;
+    let sy = 0;
+    let ax = 0;
+    let ay = 0;
+    let dx = 0;
+    let dy = 0;
+    for (let i = 0; i < defects.length; i++) {
+        x += defects[i].GPS_x;
+        sx += Math.pow(defects[i].GPS_x, 2);
+        y += defects[i].GPS_y;
+        sy += Math.pow(defects[i].GPS_y, 2);
+    }
+    ax = (defects.length == 0) ? 120.9100553 : x / defects.length;
+    ay = (defects.length == 0) ? 23.748534 : y / defects.length;
+    dx = Math.sqrt(sx / defects.length - Math.pow(ax, 2));
+    dy = Math.sqrt(sy / defects.length - Math.pow(ay, 2));
+    console.log(dy+' '+dx);
+    let zoom = (defects.length == 0) ? 8.3 : -17.732 * Math.pow(dx+dy, 3) + 44.44 * Math.pow(dx+dy, 2) - 33.253 * (dx+dy) + 16.056
+    /* End of calculation */
     document.querySelector('.map').style.display = 'block';
     map = new google.maps.Map(
         document.querySelector('.map'), {
-            center: new google.maps.LatLng(24.76184, 121.06753),
-            zoom: 16,
+            center: new google.maps.LatLng(ay, ax),
+            zoom: zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             zoomControl: false,
             mapTypeControl: false,
@@ -328,7 +351,7 @@ function initialize_map(defects, defectsname) {
             document.querySelector('.detail .window .coordinate').innerHTML = `${defects[i].GPS_x}, ${defects[i].GPS_y}`;
             document.querySelector('.detail .window .img').innerHTML = `<img>`
             let image = document.querySelector('.detail .window .img img');
-            image.src = `.\\img\\${defects[i].markdate.replaceAll('-', '')}\\previews\\${defects[i].photo_loc}`
+            image.src = `${api}\\v1\\get\\img\\${defects[i].markdate.replaceAll('-', '')}\\previews\\${defects[i].photo_loc}`
             image.addEventListener('load', () => {
                 document.querySelector('.detail').classList.add('show');
                 document.querySelector('.loading').style.opacity = 0;

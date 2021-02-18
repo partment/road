@@ -37,7 +37,7 @@ def defects_all():
 def index():
     return render_template('index.html')
 
-@app.route('/img/<path:filename>')
+@app.route('/v1/get/img/<path:filename>')
 def send_img(filename):
     return send_from_directory(Config.defects_img_path, filename, as_attachment=False)
 
@@ -51,11 +51,11 @@ def defects():
     # ^(D\d{2})(,D\d{2})*$ CHECKS IF args.type FOLLOWS THE PATTERN D01,D02,D03 ...
     # ^(\d+)(,\d+)*$ CHECKS IF args.dist FOLLOWS THE PATTERN 1,12,123,1234,12345,54321 ...
     # ^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$ CHECKS IF args.road FOLLOWS THE PATTERN 測試一路,測試二路 ...
-    # ^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(,((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$ CHECKS IF args.date FOLLOWS THE PATTERN 2020-12-31,2020-01-01 ...
+    # ^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(,((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$ CHECKS IF args.date FOLLOWS THE PATTERN 2020-12-31,2020-01-01 or 2020-12-31~2020-01-01,2021-04-01...
 
     distreg = '^(\d+)(,\d+)*$'
     roadreg = '^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$'
-    datereg = '^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(,((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$'
+    datereg = '^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(\~)?(,?((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$'
     typereg = '^(D\d{2})(,D\d{2})*$'
 
     # Slice args into conditions by ","
@@ -167,11 +167,25 @@ def getWhereClause(conditions):
         if result != '': result += ' and '
         for i in range(len(conditions['markdate'])):
             if i == 0:
-                temp += '(markdate = "{}"'.format(conditions['markdate'][i])
+                if '~' in conditions['markdate'][i]:
+                    (date1, date2) = conditions['markdate'][i].split('~', 1)
+                    temp += '(markdate between "{}"and "{}"'.format(date1, date2)
+                else:
+                    temp += '(markdate = "{}"'.format(conditions['markdate'][i])
             else:
-                temp += ' or markdate = "{}"'.format(conditions['markdate'][i])
+                if '~' in conditions['markdate'][i]:
+                    (date1, date2) = conditions['markdate'][i].split('~', 1)
+                    temp += 'or markdate between "{}"and "{}"'.format(date1, date2)
+                else:
+                    temp += ' or markdate = "{}"'.format(conditions['markdate'][i])
         temp += ')'
         result += temp
+    else:
+        if result != '': result += ' and '
+        #Last X days data
+        today = datetime.date.today()
+        past = today - datetime.timedelta(days=90)
+        result += ('markdate between "{}"and "{}"'.format(past, today))
     #DATE
     if len(conditions['markid']) > 0:
         temp = ''
