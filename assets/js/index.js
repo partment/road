@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     //Set API Source
-    let api = 'https://roadapi.partment.ga';
+    let api = 'https://hcroad.roadsafer.org/';
 
     //Initial Google Map
     let map;
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     adddist.addEventListener('click', () => {
         let value = document.querySelector('.menu .dist').value;
-        let name = document.querySelector('.menu .dist').options[document.querySelector('.menu .dist').selectedIndex].text;
+        let name = document.querySelector('.menu div.dist').innerHTML;
         if(value == '') return false;
         //2D Array Check Existed
         let duplicated = 0;
@@ -322,7 +322,7 @@ function initialize_map(defects, defectsname, api) {
     dx = Math.sqrt(sx / defects.length - Math.pow(ax, 2));
     dy = Math.sqrt(sy / defects.length - Math.pow(ay, 2));
     console.log(dy+' '+dx);
-    let zoom = (defects.length == 0) ? 8.3 : -17.732 * Math.pow(dx+dy, 3) + 44.44 * Math.pow(dx+dy, 2) - 33.253 * (dx+dy) + 16.056
+    let zoom = (defects.length == 0) ? 8.3 : -17.732 * Math.pow(dx+dy, 3) + 44.44 * Math.pow(dx+dy, 2) - 33.253 * (dx+dy) + 15.656
     /* End of calculation */
     document.querySelector('.map').style.display = 'block';
     map = new google.maps.Map(
@@ -482,7 +482,7 @@ function getDefects(api, types, dists, dates, roads) {
             'date': datestring,
             'type': typestring
         },
-        timeout: 2000
+        timeout: 5000
     }));
 }
 
