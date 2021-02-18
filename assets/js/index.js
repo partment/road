@@ -49,7 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let adddate = document.querySelector('.adddate');
     let adddist = document.querySelector('.adddist');
     let addmachi = document.querySelector('.addmachi');
-    let closewindow = document.querySelector('.detail .window .close');
+    let closewindow = document.querySelector('.detail .window > .close');
+    let closebigimage = document.querySelector('.detail .window .bigimg > .close');
 
     let dist = document.querySelector('.dist');
 
@@ -350,6 +351,7 @@ function initialize_map(defects, defectsname, api) {
             document.querySelector('.detail .window .datetime').innerHTML = `${defects[i].markdate}`;
             document.querySelector('.detail .window .coordinate').innerHTML = `${defects[i].GPS_x}, ${defects[i].GPS_y}`;
             document.querySelector('.detail .window .img').innerHTML = `<img>`
+            document.querySelector('.detail .window .bigimg').innerHTML = `<div class="close">✖</div><img>`
             let image = document.querySelector('.detail .window .img img');
             image.src = `${api}\\v1\\get\\img\\${defects[i].markdate.replaceAll('-', '')}\\previews\\${defects[i].photo_loc}`
             image.addEventListener('load', () => {
@@ -359,6 +361,28 @@ function initialize_map(defects, defectsname, api) {
                     document.querySelector('.loading').style.opacity = null;
                     document.querySelector('.loading').classList.remove('show');
                 }, 320);
+            });
+            let bigimage = document.querySelector('.detail .window .bigimg img');
+            image.addEventListener('click', () => {
+                image.style.cursor = 'wait';
+                bigimage.src = `${api}\\v1\\get\\img\\${defects[i].markdate.replaceAll('-', '')}\\originals\\${defects[i].photo_loc}`;
+                bigimage.addEventListener('load', () => {
+                    document.querySelector('.detail .window .bigimg').classList.add('show');
+                    image.style.cursor = '';
+                });
+                setTimeout(() => {
+                    let isLoaded = bigimage.complete && bigimage.naturalHeight !== 0;
+                    if(!isLoaded) {
+                        document.querySelector('.detail .window .bigimg').innerHTML = `此圖片無法正常載入，請洽管理員`;
+                        image.style.cursor = '';
+                    }
+                }, 2000);
+            });
+            document.querySelector('.detail .window .bigimg > .close').addEventListener('click', () => {
+                document.querySelector('.detail .bigimg').classList.remove('show');
+            });
+            bigimage.addEventListener('click', () => {
+                document.querySelector('.detail .bigimg').classList.remove('show');
             });
             setTimeout(() => {
                 let isLoaded = image.complete && image.naturalHeight !== 0;

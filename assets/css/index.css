@@ -66,7 +66,7 @@ select, div.dist {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 320ms ease;
+    transition: all 320ms ease;
 }
 .detail.show {
     opacity: 1;
@@ -81,7 +81,7 @@ select, div.dist {
     min-height: 300px;
     font-size: 1.25rem;
 }
-.detail .window .close {
+.detail .window > .close {
     float: right;
     font-size: 2rem;
     cursor: pointer;
@@ -91,7 +91,7 @@ select, div.dist {
     transition: all .18s linear;
 }
 .detail .window .close:hover {
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0)!important;
 }
 .detail .window .type::before {
     content: '❌';
@@ -107,6 +107,42 @@ select, div.dist {
 }
 .detail .window .img {
     margin-top: .825rem;
+}
+.detail .window .img img {
+    cursor: pointer;
+}
+.detail .window .bigimg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    opacity: 0;
+    z-index: -1;
+    transform-origin: center;
+    transition: all 0.3s ease-in-out;
+    transform: scale(0);
+    display: flex;
+    justify-content: center;
+}
+.detail .window .bigimg.show {
+    z-index: 1000;
+    opacity: 1;
+    transform: scale(1);
+}
+.detail .window .bigimg img {
+    cursor: pointer;
+    min-height: 100%;
+}
+.detail .window .bigimg > .close {
+    position: absolute;
+    top: 0.725rem;
+    right: 0.925rem;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 2rem;
+    color: rgb(70, 70, 70);
+    transition: all .18s linear;
 }
 
 /* Error Zone */
