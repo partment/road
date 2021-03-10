@@ -345,6 +345,7 @@ function initialize_map(defects, defectsname, api) {
             icon: 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png',
             map: map,
         });
+        /* Click listener of Google Maps' marker */
         marker.addListener('click', () => {
             document.querySelector('.loading').classList.add('show');
             document.querySelector('.detail .window .type').innerHTML = `${defectsname[defects[i].markid]}`;
@@ -397,6 +398,7 @@ function initialize_map(defects, defectsname, api) {
                     }
             }, 2000);
         });
+        /* End of click listener of Google Maps' marker */
     }    
 }
 

@@ -331,7 +331,7 @@ select, div.dist {
     position: absolute;
     top: 110px;
     left: 26px;
-    width: 670px;
+    width: 420px;
     animation: growDown 300ms ease-in-out forwards;
     transform-origin: top center;
     z-index: 1;
@@ -349,6 +349,8 @@ select, div.dist {
     margin-bottom: .5rem;
     border-radius: 6px;
     z-index: inherit;
+    float: left;
+    clear: both;
 }
 @keyframes growDown {
     0% {
@@ -395,12 +397,16 @@ select, div.dist {
     cursor: pointer;
     user-select: none;
     margin-bottom: .5rem;
+    float: left;
+    clear: both;
 }
 .menucontainer .advanced {
     animation: growDown 300ms ease-in-out forwards;
     transform-origin: top center;
     z-index: 1;
     display: none;
+    float: left;
+    clear: both;
 }
 .menucontainer .advanced.show {
     display: block;

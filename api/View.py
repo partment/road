@@ -3,35 +3,15 @@
 import Config
 
 import json
+#Need to install https://pypi.org/project/mariadb/
 import mariadb
 import datetime
 import re
 from flask import Flask, Response, jsonify, render_template, request, send_from_directory
 
 app = Flask(__name__, template_folder='templates', static_url_path='', static_folder='templates')
+#Disable ASCII to satisfy chinese compatibility
 app.config['JSON_AS_ASCII'] = False
-
-"""@app.route('/v1/get/defects/today', methods=['GET'])
-def defects_all():
-    date = datetime.date.today()
-    date = date.isoformat()
-
-    #cursor.execute('select markdate, GPS_x, GPS_y, photo_loc, markid from recv where markdate = "{}"'.format(date))
-    cursor.execute('select markdate, GPS_x, GPS_y, photo_loc, markid from recv')
-    result = cursor.fetchall()
-    response = {"defects": []}
-    
-    for i in range(len(result)):
-        data = {
-            "markdate": result[i][0].strftime('%Y-%m-%d'),
-            "GPS_x": result[i][1],
-            "GPS_y": result[i][2],
-            "photo_loc": result[i][3],
-            "markid": result[i][4]
-        }
-        response["defects"].append(data)
-
-    return jsonify(response)"""
 
 @app.route("/", methods=['GET'])
 def index():
@@ -51,7 +31,7 @@ def defects():
     # ^(D\d{2})(,D\d{2})*$ CHECKS IF args.type FOLLOWS THE PATTERN D01,D02,D03 ...
     # ^(\d+)(,\d+)*$ CHECKS IF args.dist FOLLOWS THE PATTERN 1,12,123,1234,12345,54321 ...
     # ^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$ CHECKS IF args.road FOLLOWS THE PATTERN 測試一路,測試二路 ...
-    # ^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(,((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$ CHECKS IF args.date FOLLOWS THE PATTERN 2020-12-31,2020-01-01 or 2020-12-31~2020-01-01,2021-04-01...
+    # ^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(\~)?(,?((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$ CHECKS IF args.date FOLLOWS THE PATTERN 2020-12-31,2020-01-01 or 2020-12-31~2020-01-01,2021-04-01...
 
     distreg = '^(\d+)(,\d+)*$'
     roadreg = '^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$'
@@ -103,6 +83,7 @@ def defects():
 
     return resp
 
+#Return dist data
 @app.route('/v1/get/dists', methods=['GET'])
 def dicts():
 
@@ -121,12 +102,14 @@ def dicts():
         response["dists"].append(data)
 
     resp = jsonify(response)
+    #Allow cross domain api access
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
     conn.close()
 
     return resp
 
+#Filter data to mysql clause conversion
 def getWhereClause(conditions):
 
     # This function works like this
@@ -186,7 +169,7 @@ def getWhereClause(conditions):
         today = datetime.date.today()
         past = today - datetime.timedelta(days=Config.last_days)
         result += ('markdate between "{}"and "{}"'.format(past, today))
-    #DATE
+    #DEFECT TYPE
     if len(conditions['markid']) > 0:
         temp = ''
         if result != '': result += ' and '
