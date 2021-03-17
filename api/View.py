@@ -7,11 +7,15 @@ import json
 import mariadb
 import datetime
 import re
+
+from flask_caching import Cache
 from flask import Flask, Response, jsonify, render_template, request, send_from_directory
 
 app = Flask(__name__, template_folder='templates', static_url_path='', static_folder='templates')
 #Disable ASCII to satisfy chinese compatibility
 app.config['JSON_AS_ASCII'] = False
+#Enable Cache in order to reduce database load
+cache = Cache(app)
 
 @app.route("/", methods=['GET'])
 def index():
@@ -85,6 +89,7 @@ def defects():
 
 #Return dist data
 @app.route('/v1/get/dists', methods=['GET'])
+@cache.cached(timeout=3600)
 def dicts():
 
     conn = connect_mysql()
