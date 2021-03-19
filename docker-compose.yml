@@ -1,0 +1,13 @@
+version: '3'
+networks:
+    road:
+        driver: bridge
+services:
+    uwsgi:
+        container_name: road_websrv
+        image: road:1.0
+        ports:
+            - 6000:6000
+        restart: always
+        networks:
+            - road
