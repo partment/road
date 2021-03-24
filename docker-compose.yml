@@ -1,13 +1,15 @@
 version: '3'
 networks:
-    road:
+    frontend:
         driver: bridge
 services:
     uwsgi:
         container_name: road_websrv
         image: road:1.0
         ports:
-            - 6000:6000
+            - 6001:6001
         restart: always
         networks:
-            - road
+            - frontend
+        volumes:
+            - /road/road_defects/web:/road/road_defects/web
