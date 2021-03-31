@@ -18,6 +18,8 @@ if os.getenv('RD_DB_USER') != None : Config.db_user = os.getenv('RD_DB_USER')
 if os.getenv('RD_DB_PASSWORD') != None : Config.db_password = os.getenv('RD_DB_PASSWORD')
 if os.getenv('RD_DB_DATABASE') != None : Config.db_database = os.getenv('RD_DB_DATABASE')
 if os.getenv('RD_IMG_PATH') != None : Config.defects_img_path = os.getenv('RD_IMG_PATH')
+if os.getenv('RD_LAST_DAYS') != None : Config.last_days = os.getenv('RD_LAST_DAYS')
+if os.getenv('RD_DOMAIN') != None : Config.domain = os.getenv('RD_DOMAIN')
 
 
 app = Flask(__name__, template_folder='templates', static_url_path='', static_folder='templates')
@@ -35,6 +37,10 @@ cache = Cache(app)
 @app.route("/", methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.route("/assets/js/index.js", methods=['GET'])
+def indexjs():
+    return render_template('assets/js/index.js', Config=Config)
 
 @app.route('/v1/get/img/<path:filename>')
 def send_img(filename):

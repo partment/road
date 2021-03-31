@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     //Set API Source
-    let api = 'https://hcroad.roadsafer.org';
+    let api = 'https://{{ Config.domain }}';
 
     //Initial Google Map
     let map;

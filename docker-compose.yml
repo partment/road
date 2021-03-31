@@ -7,15 +7,17 @@ services:
         container_name: road_websrv
         image: road:1.0
         ports:
-            - 6001:6001
+            - 6001:6000
         restart: always
         networks:
             - frontend
         volumes:
             - {path/to/nas/image/folder}:{mount/point/in/container}
         environment:
-            - RD_DB_HOST={DBHOST}
-            - RD_DB_USER={DBUSER}
-            - RD_DB_PASSWORD={DBPASSWORD}
-            - RD_DB_DATABASE={DBNAME}
+            - RD_DB_HOST={DB HOST}
+            - RD_DB_USER={DB USER}
+            - RD_DB_PASSWORD={DB PASSWORD}
+            - RD_DB_DATABASE={DB NAME}
             - RD_IMG_PATH={mount/point/in/container}
+            - RD_LAST_DAYS={DAYS TO WENT BACK}
+            - RD_DOMAIN={DOMAIN NAME}
