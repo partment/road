@@ -7,9 +7,18 @@ import json
 import mariadb
 import datetime
 import re
+import os
 
 from flask_caching import Cache
 from flask import Flask, Response, jsonify, render_template, request, send_from_directory
+
+#Replace configs with envs
+if os.getenv('RD_DB_HOST') != None : Config.db_host = os.getenv('RD_DB_HOST')
+if os.getenv('RD_DB_USER') != None : Config.db_user = os.getenv('RD_DB_USER')
+if os.getenv('RD_DB_PASSWORD') != None : Config.db_password = os.getenv('RD_DB_PASSWORD')
+if os.getenv('RD_DB_DATABASE') != None : Config.db_database = os.getenv('RD_DB_DATABASE')
+if os.getenv('RD_IMG_PATH') != None : Config.defects_img_path = os.getenv('RD_IMG_PATH')
+
 
 app = Flask(__name__, template_folder='templates', static_url_path='', static_folder='templates')
 config = {

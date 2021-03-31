@@ -12,4 +12,10 @@ services:
         networks:
             - frontend
         volumes:
-            - /road/road_defects/web:/road/road_defects/web
+            - {path/to/nas/image/folder}:{mount/point/in/container}
+        environment:
+            - RD_DB_HOST={DBHOST}
+            - RD_DB_USER={DBUSER}
+            - RD_DB_PASSWORD={DBPASSWORD}
+            - RD_DB_DATABASE={DBNAME}
+            - RD_IMG_PATH={mount/point/in/container}
