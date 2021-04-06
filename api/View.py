@@ -18,7 +18,7 @@ if os.getenv('RD_DB_USER') != None : Config.db_user = os.getenv('RD_DB_USER')
 if os.getenv('RD_DB_PASSWORD') != None : Config.db_password = os.getenv('RD_DB_PASSWORD')
 if os.getenv('RD_DB_DATABASE') != None : Config.db_database = os.getenv('RD_DB_DATABASE')
 if os.getenv('RD_IMG_PATH') != None : Config.defects_img_path = os.getenv('RD_IMG_PATH')
-if os.getenv('RD_LAST_DAYS') != None : Config.last_days = os.getenv('RD_LAST_DAYS')
+if os.getenv('RD_LAST_DAYS') != None : Config.last_days = int(os.getenv('RD_LAST_DAYS'))
 if os.getenv('RD_DOMAIN') != None : Config.domain = os.getenv('RD_DOMAIN')
 
 
