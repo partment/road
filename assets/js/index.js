@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     //Set API Source
     let api = 'https://{{ Config.domain }}';
+    //let api = 'https://fragrant-wood-a4bd.lilithraws.workers.dev/';
 
     //Initial Google Map
     let map;
@@ -11,14 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
         'D01': '縱向裂縫施工',
         'D10': '橫向裂縫間隔',
         'D11': '橫向裂縫施工',
+        'D12': '縱橫裂縫',
         'D20': '龜裂',
         'D21': '人孔破損',
-        'D30': '人孔缺失',
+        'D30': '車轍',
         'D31': '路面隆起',
         'D40': '坑洞',
         'D41': '人孔高差',
-        'D42': '薄層剝離'
+        'D42': '薄層剝離',
+        'D50': '人孔缺失',
+        'D51': '正常人孔'
     };
+
+    //Intial Defects Menu
+    let defectsmenu = document.querySelector('.menu.defects');
+    Object.keys(defectsname).forEach(key => {
+        defectsmenu.insertAdjacentHTML('beforeend', `<label class="container">${defectsname[key]}<input class="type" data-type="${key}" type="checkbox" autocomplete="off"><span class="checkmark"></span></label>`)
+    });
 
     //Initial Date Picker
     $('[data-toggle="datepicker"]').datepicker({
@@ -385,6 +395,44 @@ function initialize_map(defects, defectsname, api) {
             bigimage.addEventListener('click', () => {
                 document.querySelector('.detail .bigimg').classList.remove('show');
             });
+            document.querySelector('.detail .window .select').innerHTML = '<select class="defects" autocomplete="off"></select>';
+            let select = document.querySelector('.detail .window .select select.defects');
+            select.innerHTML = '';
+            select.insertAdjacentHTML('beforeend', `<option value="D99">不是缺陷</option>`);
+            Object.keys(defectsname).forEach(key => {
+                if(defects[i].markid != key) {
+                    select.insertAdjacentHTML('beforeend', `<option value="${key}">${defectsname[key]}</option>`);
+                }
+            });
+            initDropdownSearch('.window .select .defects');
+
+            let submit = document.querySelector('.detail .window .submit');
+            submit.innerHTML = '提交修正建議';
+            submit.classList.remove('submitted');
+            submit.addEventListener('click', function handler() {
+                if(submit.classList.contains('submitted')) return false;
+                let seq_id = defects[i].seq_id;
+                let submitAdvice = Promise.resolve($.ajax({
+                    url: api+'/v1/post/advice',
+                    type: "POST",
+                    dataType: "json",
+                    timeout: 2000,
+                    data: {
+                        seq_id,
+                        markid: select.value
+                    }
+                }));
+                submitAdvice.then(data => {
+                    submit.innerHTML = '✓';
+                }, () => {
+                    console.log('Server error occured when getting dist\'s infomation.');
+                }).finally(() => {
+                    submit.innerHTML = '✓';
+                    submit.classList.add('submitted');
+                    submit.removeEventListener('click', handler);
+                });
+            });
+            
             setTimeout(() => {
                 let isLoaded = image.complete && image.naturalHeight !== 0;
                 if(!isLoaded) {
@@ -399,7 +447,7 @@ function initialize_map(defects, defectsname, api) {
             }, 2000);
         });
         /* End of click listener of Google Maps' marker */
-    }    
+    }
 }
 
 function updateTag(target, data, type) {
@@ -484,22 +532,23 @@ function getDefects(api, types, dists, dates, roads) {
             'date': datestring,
             'type': typestring
         },
-        timeout: 5000
+        timeout: 15000
     }));
 }
 
 function initDropdownSearch(classname) {
     let select = document.querySelector(classname);
+    let dummyname = classname.split(' ').slice(-1)[0].replace('.', '');
     
-    select.insertAdjacentHTML('afterend', `<div class="list"></div>`);
-    select.insertAdjacentHTML('afterend', `<div class="${classname.replace('.', '')}"></div>`);
+    select.insertAdjacentHTML('afterend', `<div class="list ${dummyname}"></div>`);
+    select.insertAdjacentHTML('afterend', `<div class="dummy ${dummyname}"></div>`);
 
     select.style.display = 'none';
 
-    let dummyselect = document.querySelector('.menu .select div.dist');
+    let dummyselect = document.querySelector(`.select div.${dummyname}`);
     dummyselect.innerHTML = (select.options.length != 0 )? select.options[0].text : '無法取得資料';
 
-    let list = document.querySelector('.menu .list');
+    let list = document.querySelector(`.select div.list.${dummyname}`);
 
     list.insertAdjacentHTML('afterbegin', `<ul></ul>`)
 

@@ -18,7 +18,11 @@ if os.getenv('RD_DB_USER') != None : Config.db_user = os.getenv('RD_DB_USER')
 if os.getenv('RD_DB_PASSWORD') != None : Config.db_password = os.getenv('RD_DB_PASSWORD')
 if os.getenv('RD_DB_DATABASE') != None : Config.db_database = os.getenv('RD_DB_DATABASE')
 if os.getenv('RD_IMG_PATH') != None : Config.defects_img_path = os.getenv('RD_IMG_PATH')
-if os.getenv('RD_LAST_DAYS') != None : Config.last_days = int(os.getenv('RD_LAST_DAYS'))
+if os.getenv('RD_LAST_DAYS') != None :
+    try:
+        Config.last_days = int(os.getenv('RD_LAST_DAYS'))
+    except:
+        print("Env RD_LAST_DAYS is not an integer, rollback to default.")
 if os.getenv('RD_DOMAIN') != None : Config.domain = os.getenv('RD_DOMAIN')
 
 
@@ -81,11 +85,10 @@ def defects():
 
     if clause == '':
         #return jsonify({'code': 0, 'msg': 'No conditions nor properly arguments are requested.'})
-        cursor.execute('select markdate, GPS_x, GPS_y, photo_loc, markid, road_name, seq_id from recv order by seq_id'.format(clause))
+        cursor.execute('select markdate, GPS_x, GPS_y, photo_loc, markid, road_name, seq_id from recv order by seq_id')
     else:
         cursor.execute('select markdate, GPS_x, GPS_y, photo_loc, markid, road_name, seq_id from recv where {} order by seq_id'.format(clause))
 
-    #cursor.execute('select markdate, GPS_x, GPS_y, photo_loc, markid, road_name, seq_id from recv where {} order by seq_id'.format(clause))
     result = cursor.fetchall()
     response = {"defects": []}
 
@@ -102,7 +105,8 @@ def defects():
         response["defects"].append(data)
 
     resp = jsonify(response)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Origin'] = 'https://'+Config.domain
+    resp.headers['Vary'] = 'Origin'
 
     conn.close()
 
@@ -129,9 +133,50 @@ def dicts():
 
     resp = jsonify(response)
     #Allow cross domain api access
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Origin'] = 'https://'+Config.domain
+    resp.headers['Vary'] = 'Origin'
 
     conn.close()
+
+    return resp
+
+#Write Alignment to Database
+@app.route('/v1/post/advice', methods=['POST'])
+def advice():
+
+    seqreg = '^\d+$'
+    typereg = '^(D\d{2})$'
+
+    (req_id, markid) = (request.values.get('seq_id'), request.values.get('markid'))
+
+    req_id = req_id if req_id != None and re.match(seqreg, req_id) else ''
+    markid = markid if markid != None and re.match(typereg, markid) else ''
+
+    response = {}
+    
+    if req_id != '' and markid != '':
+        conn = connect_mysql()
+        cursor = conn.cursor()
+
+        sql = 'insert into `Alignments` (`seq_id`, `markid`, `time`) VALUES (%d, %s, %s)'
+        val = (req_id, markid, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        try:
+            cursor.execute(sql, val)
+            conn.commit()
+            if cursor.rowcount > 0:
+                response = {"code": 200, "status": "success"}
+            else:
+                response = {"code": 200, "status": "fail"}
+        except mariadb.Error as e:
+            print(f"Error: {e}")
+            response = {"code": 200, "status": "fail"}
+        finally:
+            conn.close()
+
+    resp = jsonify(response)
+    #Allow cross domain api access
+    resp.headers['Access-Control-Allow-Origin'] = 'https://'+Config.domain
+    resp.headers['Vary'] = 'Origin'
 
     return resp
 

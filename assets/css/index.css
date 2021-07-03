@@ -18,7 +18,7 @@ html, body {
 ::-ms-input-placeholder {
     color: #ececec;
 }
-select, div.dist {
+select, div.dummy.dist, div.dummy.defects {
     width: 180px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -144,7 +144,58 @@ select, div.dist {
     color: rgb(70, 70, 70);
     transition: all .18s linear;
 }
-
+.detail .window .select .dummy.defects {
+    width: 180px;
+    height: 36px;
+    display: block;
+    padding: .375rem .75rem;
+    margin-top: .675rem;
+    font-size: 1rem;
+    color: #fafafa;
+    background-color: rgb(15, 163, 47);
+    background-clip: padding-box;
+    border-radius: .25rem;
+    cursor: pointer;
+    transform: translateY(.04rem);
+}
+.detail .window .submit {
+    background-color: rgb(11, 124, 36);
+    outline: none;
+    border: none;
+    border-radius: .375rem;
+    padding: .545rem .225rem;
+    color: white;
+    cursor: pointer;
+    transform: translateY(-.03rem);
+    font-weight: bold;
+    width: 8rem;
+}
+.detail .window .submit.submitted:hover + .submitted-notice{
+    opacity: 1;
+}
+.detail .window .submitted-notice {
+    background-color: rgb(15, 163, 47);
+    display: inline-block;
+    font-size: .8rem;
+    opacity: 0;
+    border-radius: .375rem;
+    transition: opacity 150ms ease;
+    padding: .375rem .725rem;
+    position: relative;
+    left: 10px;
+    color: white;
+}
+.detail .window .submitted-notice::before {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 8px;
+    left: -6px;
+    background: rgb(15, 163, 47);
+}
 /* Error Zone */
 .error {
     font-size: 1.325rem;
@@ -387,7 +438,6 @@ select, div.dist {
     position: sticky;
     left: 0;
     top: .05rem;
-    display: inline-block;
     padding: .3rem .85rem .5rem;
     font-size: 1.2rem;
     line-height: 1.2rem;
@@ -420,6 +470,7 @@ select, div.dist {
     position: relative;
     padding-left: 30px;
     margin-bottom: .375rem;
+    margin-right: .275rem;
     cursor: pointer;
     font-size: 1.1rem;
     -webkit-user-select: none;
@@ -470,14 +521,13 @@ select, div.dist {
 }
 /* End of Custom Checkbox */
 /* Start of Custom Select Dropdown */
-.menu .select {
+.menu .select, .window .select {
     position: relative;
     display: inline-block;
 }
-.menu .list {
+.menu .list.dist, .window .list.defects {
     display: none;
     position: absolute;
-    top: 36px;
     height: 200px;
     width: 180px;
     background: rgb(48, 48, 48);
@@ -489,30 +539,36 @@ select, div.dist {
     animation: growDown 300ms ease-in-out forwards;
     transform-origin: top center;
 }
-.menu .list.show {
+.window .list.defects {
+    top: 39px;
+    background-color: rgb(15, 163, 47);
+    color: white;
+    font-size: 1rem;
+}
+.menu .list.show, .window .list.show {
     display: block;
 }
-.menu .list.up {
+.menu .list.up, .window .list.up {
     animation: growUp 300ms ease-in-out forwards;
 }
-.menu .list::-webkit-scrollbar-track {
+.menu .list::-webkit-scrollbar-track, .window .list::-webkit-scrollbar-track {
 	background-color: transparent;
 }
-.menu .list::-webkit-scrollbar {
+.menu .list::-webkit-scrollbar, .window .list::-webkit-scrollbar {
 	width: 6px;
 	background-color: transparent;
 }
-.menu .list::-webkit-scrollbar-thumb {
+.menu .list::-webkit-scrollbar-thumb, .window .list::-webkit-scrollbar-thumb {
 	background-color: #e3e3e3;
 }
-.menu .list .search {
+.menu .list .search, .window .list .search {
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0.5rem;
 }
-.menu .list .searchbox {
+.menu .list .searchbox, .window .list .searchbox {
     width: 90%;
     padding: 0.5rem;
     border: none;
@@ -521,11 +577,14 @@ select, div.dist {
     background: rgb(26, 26, 26);
     color: white;
 }
-.menu .list ul {
+.window .list .searchbox {
+    background-color: rgb(11, 124, 36);
+}
+.menu .list ul, .window .list ul {
     padding: 0;
     margin: 0;
 }
-.menu .list .option {
+.menu .list .option, .window .list .option {
     cursor: pointer;
     outline: none;
     padding: .275rem .725rem;
@@ -534,15 +593,18 @@ select, div.dist {
     transition: all 0.2s;
     list-style: none;
 }
-.menu .list .option.hide {
+.menu .list .option.hide, .window .list .option.hide {
     display: none;
 }
 .menu .list .option:hover {
     background: rgb(29, 29, 29);
 }
+.window .list .option:hover {
+    background-color: rgb(11, 124, 36);
+}
 /* End of Custom Select Dropdown */
 /* Start of Custom Input */
-.menu .dist {
+.menu .dummy.dist {
     width: 180px;
     height: 36px;
     display: block;
