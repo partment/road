@@ -8,20 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Initial Defects Name
     let defectsname = {
-        'D00': '縱向裂縫輪痕',
-        'D01': '縱向裂縫施工',
-        'D10': '橫向裂縫間隔',
-        'D11': '橫向裂縫施工',
+        'D00': '縱向裂縫',
+        'D10': '橫向裂縫',
         'D12': '縱橫裂縫',
         'D20': '龜裂',
         'D21': '人孔破損',
-        'D30': '車轍',
+        'D24': '鋪面變形推擠',
+        'D28': '路面雜草',
+        'D30': '路面車轍',
         'D31': '路面隆起',
+        'D32': '伸縮縫有雜草',
+        'D33': '伸縮縫高差不平整',
         'D40': '坑洞',
         'D41': '人孔高差',
         'D42': '薄層剝離',
         'D50': '人孔缺失',
-        'D51': '正常人孔'
+        'D51': '水溝蓋缺失',
+        'D60': '補綻'
     };
 
     //Intial Defects Menu
@@ -70,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Initial Dist List
     let distsdata = getDist(api);
     distsdata.then(data => {
+        dist.insertAdjacentHTML('beforeend', `<option value="null">無法對應區</option>`);
         data['dists'].forEach(e => {
             dist.insertAdjacentHTML('beforeend', `<option value="${e['dist_id']}">${e['dist_name']}</option>`);
         });

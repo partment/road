@@ -58,11 +58,11 @@ def defects():
 
     # Following regexps are meant to prevent unexpected requests or attacks
     # ^(D\d{2})(,D\d{2})*$ CHECKS IF args.type FOLLOWS THE PATTERN D01,D02,D03 ...
-    # ^(\d+)(,\d+)*$ CHECKS IF args.dist FOLLOWS THE PATTERN 1,12,123,1234,12345,54321 ...
+    # ^(\d+|null)(,(\d+|null))*$ CHECKS IF args.dist FOLLOWS THE PATTERN null,1,12,123,null,1234,12345,54321 ...
     # ^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$ CHECKS IF args.road FOLLOWS THE PATTERN 測試一路,測試二路 ...
     # ^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(\~)?(,?((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$ CHECKS IF args.date FOLLOWS THE PATTERN 2020-12-31,2020-01-01 or 2020-12-31~2020-01-01,2021-04-01...
 
-    distreg = '^(\d+)(,\d+)*$'
+    distreg = '^(\d+|null)(,(\d+|null))*$'
     roadreg = '^([\u4E00-\u9FFF]+)(,[\u4E00-\u9FFF]+)*$'
     datereg = '^(((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))(\~)?(,?((19|20)\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))*$'
     typereg = '^(D\d{2})(,D\d{2})*$'
@@ -199,9 +199,15 @@ def getWhereClause(conditions):
         if result != '': result += ' and '
         for i in range(len(conditions['dist_id'])):
             if i == 0:
-                temp += '(dist_id = "{}"'.format(conditions['dist_id'][i])
+                if conditions['dist_id'][i] == 'null':
+                    temp += '(dist_id is null'
+                else:
+                    temp += '(dist_id = "{}"'.format(conditions['dist_id'][i])
             else:
-                temp += ' or dist_id = "{}"'.format(conditions['dist_id'][i])
+                if conditions['dist_id'][i] == 'null':
+                    temp += ' or dist_id is null'.format(conditions['dist_id'][i])
+                else:
+                    temp += ' or dist_id = "{}"'.format(conditions['dist_id'][i])
         temp += ')'
         result += temp
     #ROAD
